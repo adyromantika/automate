@@ -41,6 +41,16 @@ The workaround:
 
 Remember to replace `<PATH_TO_VIRTUALENV>` and `x` with your version of Python.
 
+## Quick Start with Vagrant
+
+1. Clone this repository
+1. Create an AWS key pair with the name `automate`, save it as `automate.pem` in the root directory of the repository
+1. Execute `vagrant up`
+1. Enter the vm with `vagrant ssh`
+1. Execute `~/automate/scripts/provision.sh`
+
+Warning: Make sure to check and change the parameters in `ansible/host_vars/localhost` if you have an existing infrastructure, to avoid any issues.
+
 ---
 
 # Why it is built this way
@@ -92,4 +102,3 @@ Out of the box, no. With further refinements, sure.
 ### Scaling
 
 - Ansible (without the Tower) is a push tool, making it an unsuitable tool for autoscaling on demand plain instances. It can, however be used for configuring autoscaling provided that we have AMI images and immutable servers.
-

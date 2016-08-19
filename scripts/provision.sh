@@ -18,7 +18,7 @@ else
 fi
 
 if [ -z ${AWS_ACCESS_KEY_ID} ] || [ -z ${AWS_SECRET_ACCESS_KEY} ]; then
-    echo "Error: Both AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environtment variables are required"
+    echo "Error: Both AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are required"
     exit 1
 fi
 
