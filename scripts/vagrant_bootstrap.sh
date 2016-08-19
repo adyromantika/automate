@@ -2,10 +2,6 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
-#TODO remove
-sudo route del default gw 10.0.2.2
-sudo route add default gw 192.168.0.1
-
 # Install dependencies
 sudo apt-get -y update
 sudo apt-get install -y python-pip libpython-dev libffi-dev libssl-dev
