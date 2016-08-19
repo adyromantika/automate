@@ -22,6 +22,9 @@ if [ -z ${AWS_ACCESS_KEY_ID} ] || [ -z ${AWS_SECRET_ACCESS_KEY} ]; then
     exit 1
 fi
 
+# Make sure ssh-agent is alive
+eval `ssh-agent`
+
 # Load identity into agent
 ssh-add ${SSH_KEY}
 ssh-add -l
