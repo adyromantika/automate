@@ -1,0 +1,12 @@
+dist: trusty
+sudo: required
+services:
+- docker
+language: python
+install:
+- pip install ansible boto
+script:
+- ./scripts/hello.sh
+before_install:
+- openssl aes-256-cbc -K $encrypted_3d76f0b55d8e_key -iv $encrypted_3d76f0b55d8e_iv
+  -in automate.pem.enc -out automate.pem -d
