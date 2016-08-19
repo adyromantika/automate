@@ -1,0 +1,17 @@
+---
+region: ap-southeast-1
+key_pair: 'automate'
+instance_type: 't2.micro'
+ami_image: 'ami-21d30f42' # Ubuntu 14.04 in ap-southeast-1
+cidr_block: 172.16.0.0/23
+
+launched_instances: []
+
+region_subnet_matrix:
+  - cidr: 172.16.0.0/24
+    az: '{{ region }}a'
+    resource_tags: { "environment":"dev", "tier" : "web" }
+  - cidr: 172.16.1.0/24
+    az: '{{ region }}b'
+    resource_tags: { "environment":"dev", "tier" : "web" }
+

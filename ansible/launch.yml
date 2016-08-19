@@ -1,0 +1,159 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+  - name: Create VPC
+    ec2_vpc:
+      state: present
+      cidr_block: '{{ cidr_block }}'
+      resource_tags: { "environment":"development" }
+      region: '{{ region }}'
+      internet_gateway: True
+      subnets: '{{ region_subnet_matrix }}'
+      route_tables:
+        - subnets: '{{ region_subnet_matrix | map(attribute="cidr") | list }}'
+          routes:
+            - dest: 0.0.0.0/0
+              gw: igw
+      wait: true
+    register: vpc_results
+
+  - name: Restrict default security group
+    ec2_group:
+      name: default
+      description: Disallow everything incoming
+      region: '{{ region }}'
+      vpc_id: '{{ vpc_results.vpc_id }}'
+
+  - name: Add security group for load balancer
+    ec2_group:
+      name: loadbalancer_sg
+      description: Allow port 80 inbound
+      region: '{{ region }}'
+      vpc_id: '{{ vpc_results.vpc_id }}'
+      rules:
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+    register: lb_sg_results
+
+  - name: Add security group for webservers
+    ec2_group:
+      name: webservers_sg
+      description: Allow SSH to webservers for ansible access
+      region: '{{ region }}'
+      vpc_id: '{{ vpc_results.vpc_id }}'
+      rules:
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          group_id: '{{ lb_sg_results.group_id }}'
+      rules_egress:
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+
+  - name: Launch webserver instance(s) in subnets
+    ec2:
+        image: '{{ ami_image }}'
+        instance_type: "{{ instance_type }}"
+        region: '{{ region }}'
+        keypair: '{{ key_pair }}'
+        instance_tags: '{"environment":"dev","class":"webserver-{{ item.id }}","name":"web"}'
+        group: 'webservers_sg'
+        wait: true
+        vpc_subnet_id: '{{ item.id }}'
+        assign_public_ip: yes
+        exact_count: 1 
+        count_tag:
+            class: 'webserver-{{item.id}}'
+    register: ec2_results
+    with_items: '{{ vpc_results.subnets }}'
+
+  - name: Add the instances into the in-memory inventory of hosts
+    add_host:
+      hostname: '{{ item.tagged_instances[0].public_ip }}'
+      groupname: 'ec2hosts'
+    with_items: "{{ ec2_results.results }}"
+
+  - name: Wait for SSH to be available on the instances
+    wait_for:
+      state=started
+      search_regex=OpenSSH
+      host='{{ item.tagged_instances[0].public_dns_name }}'
+      port=22
+    with_items: '{{ ec2_results.results }}'
+
+  - name: Collect launched instances hostnames to be used later when testing
+    set_fact:
+       launched_instances: "{{ launched_instances + [ item.tagged_instances[0].public_dns_name ] }}"
+    with_items: '{{ ec2_results.results }}'
+
+  - name: Launch the load balancer
+    local_action:
+      module: ec2_elb_lb
+      name: 'loadbalancer'
+      scheme: internet-facing
+      state: present
+      security_group_names: 'loadbalancer_sg'
+      region: '{{ region }}'
+      subnets: '{{ vpc_results.subnets | map(attribute="id") | list }}'
+      listeners:
+        - protocol: http
+          load_balancer_port: 80
+          instance_port: 80
+    register: loadbalancer_info
+
+  - name: Collect the load balancer hostname to be used later when testing
+    set_fact:
+      loadbalancer_url: '{{ loadbalancer_info.elb.dns_name }}'
+
+# Run specific roles to install and configure the application
+- hosts: ec2hosts
+  gather_facts: true
+  user: ubuntu
+  sudo: yes
+  roles:
+    - webservers
+
+- hosts: ec2hosts
+  tasks:
+  - name: Gather ec2 facts
+    ec2_facts:
+  - name: Add created instances to elb
+    local_action:
+        module: ec2_elb
+        region: 'ap-southeast-1'
+        instance_id: '{{ ansible_ec2_instance_id }}'
+        ec2_elbs: 'loadbalancer'
+        state: present
+
+# Run tests
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+  - name: Load the main content of the web page from the load balancer
+    action: uri url=http://{{ hostvars['localhost']['loadbalancer_url'] }} return_content=yes
+    register: webpage
+
+  - assert:
+      that:
+        - "'Automation for the People' in webpage.content"
+
+  - name: Test whether instances are listening on port 22
+    wait_for:
+      search_regex=OpenSSH
+      host='{{ item }}'
+      port=22
+    with_items: '{{ hostvars["localhost"]["launched_instances"] }}'
+
