@@ -1,6 +1,6 @@
-# AWS Automation ![Build status](https://travis-ci.org/adyromantika/automate.svg?branch=master)
+# AWS Automation [![Build Status](https://travis-ci.org/adyromantika/automate.svg?branch=master)](https://travis-ci.org/adyromantika/automate)
 
-This project utilizes [ansible](https://github.com/ansible/ansible) to automate the provisioning of an AWS environment that hosts a simple load-balanced HTML webpage hosted by two instances of EC2 instances running nginx.
+This project utilizes [ansible](https://github.com/ansible/ansible) to automate the provisioning of an AWS environment that hosts a simple load-balanced HTML webpage hosted by two load-balanced EC2 instances running nginx.
 
 ## Pre-requisites
 
@@ -87,7 +87,7 @@ Out of the box, no. With further refinements, sure.
 
 ### Complexity
 
-- This project is very simple as it deploys a single HTML file. In the real production environment there would be more requirements that we need to observe, for example load balancer stickiness that does not matter for static files, or sessions handling.
+- This project is very simple as it deploys a single HTML file. In the real production environment there would be more requirements that we need to observe, for example load balancer stickiness (that does not matter for static files in this project), or sessions handling.
 
 ### Scaling
 
