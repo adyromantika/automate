@@ -47,6 +47,7 @@ Remember to replace `<PATH_TO_VIRTUALENV>` and `x` with your version of Python.
 1. Create an AWS key pair with the name `automate`, save it as `automate.pem` in the root directory of the repository
 1. Execute `vagrant up`
 1. Enter the vm with `vagrant ssh`
+1. Export AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY into the environment
 1. Execute `~/automate/scripts/provision.sh`
 
 Warning: Make sure to check and change the parameters in `ansible/host_vars/localhost` if you have an existing infrastructure, to avoid any issues.
