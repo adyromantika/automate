@@ -15,7 +15,7 @@ resource "aws_route" "internet_access" {
 resource "aws_subnet" "subnets" {
     vpc_id            = "${aws_vpc.default.id}"
     count             = "${length(split(",", lookup(var.aws_availability_zones, var.aws_region)))}"
-    cidr_block        = "${cidrsubnet(var.vpc_cidr, 1, count.index)}"
+    cidr_block        = "${cidrsubnet(var.vpc_cidr, 2, count.index)}"
     availability_zone = "${element(split(",", lookup(var.aws_availability_zones, var.aws_region)), count.index)}"
     map_public_ip_on_launch = true
 
