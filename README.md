@@ -25,5 +25,6 @@ Travis builds will not run for pull requests as there is risk of AWS resources g
 
 ## Todo
 
+1. Terraform: send the file to be hosted to the instances
 1. Add Terraform support for the Vagrant machine
 1. Add Terraform execution to Travis
