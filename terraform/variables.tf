@@ -43,14 +43,14 @@ variable "aws_amis" {
 
 variable "vpc_cidr" {
     description = "CIDR for the whole VPC"
-    default = "172.16.2.0/23"
+    default = "172.16.4.0/22"
 }
 
 variable "subnet_cidr" {
     description = "CIDR for the Public Subnet"
     default = {
-        "ap-southeast-1a" = "172.16.2.0/24"
-        "ap-southeast-1b" = "172.16.3.0/24"
+        "ap-southeast-1a" = "172.16.4.0/24"
+        "ap-southeast-1b" = "172.16.5.0/24"
     }
 }
 

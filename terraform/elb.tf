@@ -1,5 +1,5 @@
 resource "aws_elb" "web" {
-    name = "terraform-example-elb"
+    name = "automate-terraform-elb"
 
     listener {
         instance_port = 80
@@ -23,7 +23,7 @@ resource "aws_elb" "web" {
 }
 
 resource "aws_security_group" "elb" {
-  name        = "terraform_example_elb"
+  name        = "automate_terraform_elb"
   description = "Used in the terraform"
   vpc_id      = "${aws_vpc.default.id}"
 

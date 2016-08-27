@@ -26,7 +26,7 @@ resource "aws_subnet" "subnets" {
 
 # Our default security group to access the instances over SSH and HTTP
 resource "aws_security_group" "default" {
-  name        = "automate_terraform_default"
+  name        = "default"
   description = "Used in the terraform"
   vpc_id      = "${aws_vpc.default.id}"
 
@@ -43,7 +43,7 @@ resource "aws_security_group" "default" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["172.16.2.0/23"]
+    cidr_blocks = ["${var.vpc_cidr}"]
   }
 
   # outbound internet access
