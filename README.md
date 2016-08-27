@@ -9,6 +9,8 @@ There are currently two methods, and their respective READMEs are in their own f
 
 **Please note that if you execute any of these, you will be billed on your AWS account.**
 
+Travis builds will not run for pull requests as there is risk of AWS resources getting launched without me realizing it.
+
 ## Common Pre-requisites
 
 ### On AWS
@@ -20,3 +22,8 @@ There are currently two methods, and their respective READMEs are in their own f
 1. There are various methods to set the keys but in this project environment variables are used to make it easy to change in Travis:
   - AWS_ACCESS_KEY_ID
   - AWS_SECRET_ACCESS_KEY
+
+## Todo
+
+1. Add Terraform support for the Vagrant machine
+1. Add Terraform execution to Travis
