@@ -26,7 +26,7 @@ fi
 if [ -f "${SCRIPTDIR}/.shared-ssh-agent" ]; then
     source ".shared-ssh-agent"
 else
-    eval "$(ssh-agent -s > ${SCRIPTDIR}/.shared-ssh-agent)"
+    eval `ssh-agent -s | tee ${SCRIPTDIR}/.shared-ssh-agent`
 fi
 
 # Load identity into agent
