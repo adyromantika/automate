@@ -24,7 +24,7 @@ fi
 
 # Make sure ssh-agent is alive
 if [ -f "${SCRIPTDIR}/.shared-ssh-agent" ]; then
-    source ".shared-ssh-agent"
+    source "${SCRIPTDIR}/.shared-ssh-agent"
 else
     eval `ssh-agent -s | tee ${SCRIPTDIR}/.shared-ssh-agent`
 fi
