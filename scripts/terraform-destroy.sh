@@ -7,6 +7,6 @@ set -o pipefail
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Launch the automation
-cd ${SCRIPTDIR}/../ansible
+cd ${SCRIPTDIR}/../terraform
 ${SCRIPTDIR}/terraform destroy -force
 
