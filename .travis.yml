@@ -13,3 +13,6 @@ before_install:
 branches:
   only:
     - master
+env:
+- LAUNCHER=terraform
+- LAUNCHER=ansible
