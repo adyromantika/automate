@@ -11,7 +11,7 @@ This method utilizes [ansible](https://github.com/ansible/ansible) to automate t
 ### On the SSH host
 
 1. A working installation of ansible and the boto Python module.
-1. The AWS key file located in the root directory of the project. It defaults to `automate.pem` but the filename can be changed in  [scripts/provision.sh](../scripts/provision.sh). Please ignore `automate.pem.enc` file as that is provided for Travis builds.
+1. The AWS key file located in the root directory of the project. It defaults to `automate.pem` but the filename can be changed in  [scripts/prepare-env.sh](../scripts/prepare-env.sh). Please ignore `automate.pem.enc` file as that is provided for Travis builds.
 1. Environment variables:
   - AWS_ACCESS_KEY_ID
   - AWS_SECRET_ACCESS_KEY
@@ -26,7 +26,7 @@ All configurations related to AWS such as the name of the key pair to use, insta
 Note that I am using the `ap-southeast-1` region as that is the closest to me. If you change this, make sure to change the AMI image to the one corresponding to your region.
 
 ### Launching
-To launch the full environment, one needs to run `scripts/provision.sh`.
+To launch the full environment, one needs to run `scripts/ansible-launch.sh`.
 
 ## Caveat
 

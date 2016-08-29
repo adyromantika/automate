@@ -6,7 +6,7 @@ language: python
 install:
 - pip install ansible boto
 script:
-- ./scripts/provision.sh
+- ./scripts/travis-build.sh
 before_install:
 - openssl aes-256-cbc -K $encrypted_3d76f0b55d8e_key -iv $encrypted_3d76f0b55d8e_iv
   -in automate.pem.enc -out automate.pem -d

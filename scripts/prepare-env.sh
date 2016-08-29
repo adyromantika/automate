@@ -29,7 +29,4 @@ eval `ssh-agent`
 ssh-add ${SSH_KEY}
 ssh-add -l
 
-# Launch the automation
-cd ${SCRIPTDIR}/../ansible
-ansible-playbook launch.yml -vv
 
