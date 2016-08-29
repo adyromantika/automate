@@ -8,5 +8,5 @@ SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Launch the automation
 cd ${SCRIPTDIR}/../ansible
-${SCRIPTDIR}/terraform destroy
+${SCRIPTDIR}/terraform destroy -force
 
