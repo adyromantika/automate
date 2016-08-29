@@ -23,10 +23,10 @@ if [ -z ${AWS_ACCESS_KEY_ID} ] || [ -z ${AWS_SECRET_ACCESS_KEY} ]; then
 fi
 
 # Make sure ssh-agent is alive
-if [ -f ".shared-ssh-agent" ]; then
+if [ -f "${SCRIPTDIR}/.shared-ssh-agent" ]; then
     source ".shared-ssh-agent"
 else
-    eval "$(ssh-agent -s > .shared-ssh-agent)"
+    eval "$(ssh-agent -s > ${SCRIPTDIR}/.shared-ssh-agent)"
 fi
 
 # Load identity into agent
