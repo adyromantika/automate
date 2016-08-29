@@ -1,2 +1,3 @@
 automate.pem
 .vagrant
+.shared-ssh-agent
