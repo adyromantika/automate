@@ -3,8 +3,6 @@ sudo: required
 services:
 - docker
 language: python
-install:
-- pip install ansible boto
 script:
 - ./scripts/travis-build.sh
 before_install:

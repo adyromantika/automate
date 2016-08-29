@@ -12,6 +12,6 @@ source ${SCRIPTDIR}/.shared-ssh-agent
 
 # Launch the automation
 cd ${SCRIPTDIR}/../terraform
-${SCRIPTDIR}/../terraform plan
-${SCRIPTDIR}/../terraform apply
+${SCRIPTDIR}/terraform plan
+${SCRIPTDIR}/terraform apply
 
