@@ -20,6 +20,8 @@
       wait: true
     register: vpc_results
 
+  - ini_file: dest=inventory/aws_launched section=vpc option=vpc value='{{ vpc_results.vpc_id }}'
+
   - name: Restrict default security group
     ec2_group:
       name: default
@@ -82,6 +84,9 @@
     add_host:
       hostname: '{{ item.tagged_instances[0].public_ip }}'
       groupname: 'ec2hosts'
+    with_items: "{{ ec2_results.results }}"
+
+  - ini_file: dest=inventory/aws_launched section=ec2 option='{{ item.tagged_instances[0].id }}' value='{{ item.tagged_instances[0].id }}'
     with_items: "{{ ec2_results.results }}"
 
   - name: Wait for SSH to be available on the instances

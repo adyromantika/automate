@@ -1,0 +1,54 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+  - name: Remove load balancer
+    ec2_elb_lb:
+      name: 'loadbalancer'
+      region: '{{ region }}'
+      state: absent
+      wait: yes
+
+  - name: Remove instances
+    ec2:
+        state: absent
+        instance_ids: '{{ item }}'
+        region: '{{ region }}'
+        wait: yes
+    with_ini: .* section=ec2 file=inventory/aws_launched re=true
+
+  - ini_file: dest=inventory/aws_launched section=ec2 option='{{ item }}' state=absent
+    with_ini: .* section=ec2 file=inventory/aws_launched re=true
+
+  - name: Remove internet gateway
+    ec2_vpc_igw:
+        vpc_id: '{{ lookup("ini", "vpc section=vpc  file=inventory/aws_launched") }}'
+        state: absent
+        region: '{{ region }}'
+
+  - name: Remove web server security group
+    ec2_group:
+        name: webservers_sg
+        state: absent
+        region: '{{ region }}'
+        description: 'Remove'
+
+  - name: Remove load balancer security group
+    ec2_group:
+        name: loadbalancer_sg
+        state: absent
+        region: '{{ region }}'
+        description: 'Remove'
+
+  - name: Remove VPC
+    ec2_vpc:
+        cidr_block: '{{ cidr_block }}'
+        state: absent
+        vpc_id: '{{ lookup("ini", "vpc section=vpc  file=inventory/aws_launched") }}'
+        region: '{{ region }}'
+        resource_tags: { "environment":"development" }
+
+  - ini_file: dest=inventory/aws_launched section=vpc option='vpc' state=absent
+
